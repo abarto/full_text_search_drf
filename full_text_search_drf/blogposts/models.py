@@ -9,9 +9,9 @@ from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionMo
 class BlogpostQueryset(models.QuerySet):
     def full_text_search(self, text):
         return self.extra(
-            select={'rank': "ts_rank_cd(to_tsvector('english', blogposts_blogpost.title || ' ' || blogposts_blogpost.description || ' ' || blogposts_blogpost.content), to_tsquery(%s), 32)"},
+            select={'rank': "ts_rank_cd(to_tsvector('english', blogposts_blogpost.title || ' ' || blogposts_blogpost.description || ' ' || blogposts_blogpost.content), plainto_tsquery(%s), 32)"},
             select_params=(text,),
-            where=("to_tsvector('english', blogposts_blogpost.title || ' ' || blogposts_blogpost.description || ' ' || blogposts_blogpost.content) @@ to_tsquery(%s)",),
+            where=("to_tsvector('english', blogposts_blogpost.title || ' ' || blogposts_blogpost.description || ' ' || blogposts_blogpost.content) @@ plainto_tsquery(%s)",),
             params=(text,),
             order_by=('-rank',)
         )
@@ -20,9 +20,9 @@ class BlogpostQueryset(models.QuerySet):
 class CommentQueryset(models.QuerySet):
     def full_text_search(self, text):
         return self.extra(
-            select={'rank': "ts_rank_cd(to_tsvector('english', blogposts_comment.content), to_tsquery(%s), 32)"},
+            select={'rank': "ts_rank_cd(to_tsvector('english', blogposts_comment.content), plainto_tsquery(%s), 32)"},
             select_params=(text,),
-            where=("to_tsvector('english', blogposts_comment.content) @@ to_tsquery(%s)",),
+            where=("to_tsvector('english', blogposts_comment.content) @@ plainto_tsquery(%s)",),
             params=(text,),
             order_by=('-rank',)
         )
