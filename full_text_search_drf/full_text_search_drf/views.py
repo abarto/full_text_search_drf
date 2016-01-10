@@ -7,4 +7,6 @@ from .serializers import UserSerializer
 
 class UserViewSet(ReadOnlyModelViewSet):
     serializer_class = UserSerializer
+    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
     queryset = get_user_model().objects.all()
