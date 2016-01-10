@@ -39,4 +39,12 @@ Vagrant.configure(2) do |config|
     python manage.py migrate
     python manage.py loaddata data.json
   SHELL
+
+  config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
+    source /home/vagrant/full_text_search_drf_venv/bin/activate
+
+    cd /home/vagrant/full_text_search_drf/full_text_search_drf/
+
+    gunicorn --bind 0.0.0.0:8000 --daemon --workers 4 full_text_search_drf.wsgi
+  SHELL
 end
