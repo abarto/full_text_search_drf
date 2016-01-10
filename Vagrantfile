@@ -37,5 +37,6 @@ Vagrant.configure(2) do |config|
     cd full_text_search_drf/full_text_search_drf/
 
     python manage.py migrate
+    python manage.py loaddata data.json
   SHELL
 end
