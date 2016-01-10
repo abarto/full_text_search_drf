@@ -15,5 +15,5 @@ class BlogpostSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Blogpost
-        fields = ('url', 'title', 'slug', 'description', 'content', 'allow_comments', 'author', 'created', 'modified', 'comments')
+        fields = ('url', 'title', 'slug', 'description', 'content', 'author', 'created', 'modified', 'comments')
         read_only_fields = ('url', 'slug', 'author', 'created', 'modified', 'comments')
