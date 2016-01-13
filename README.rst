@@ -71,8 +71,6 @@ And the viewsets are just typical ModelViewSet implementations:
         )
         filter_class = CommentFilter
 
-Another thing we changed from the `learn_drf_nested_resources <https://github.com/abarto/learn_drf_nested_resources>`_ project is that we use `django-rest-framework-jwt <https://github.com/GetBlimp/django-rest-framework-jwt>`_ for authentication. If you don't know what `JSON Web Tokens (JWT) <https://jwt.io/>`_ are, think about them as `token authentication <http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication>`_.
-
 Full Text Search with PostgreSQL
 --------------------------------
 
@@ -194,27 +192,11 @@ What ties the whole thing together are a couple of `django-filter <https://githu
 Example
 -------
 
-The following shell session shows how to use these filters using `httpie <http://httpie.org>`_. First of all, we need to obtain a JWT token so we can hit the blogposts endpoints, which require authentication:
+The following shell session shows how to use these filters using `httpie <http://httpie.org>`_. First we'll make a simple request without filtering to make sure everything works as intended:
 
 ::
 
-    $ http POST :8000/api-token-auth/ username=reader password=readerHTTP/1.0 200 OK
-    Allow: POST, OPTIONS
-    Content-Type: application/json
-    Date: Sun, 10 Jan 2016 18:24:16 GMT
-    Server: WSGIServer/0.2 CPython/3.4.3
-    Vary: Accept
-    X-Frame-Options: SAMEORIGIN
-
-    {
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJlYWRlciIsImV4cCI6MTQ1MjQ5MzQ1NiwiZW1haWwiOiIiLCJ1c2VyX2lkIjozfQ.P2LZeckkjAC8NBvxP_ToD0s7jwpBXeojZCwMI1XMDH4"
-    }
-
-We'll refer to this token as ``<jwt token>`` is subsequent request. First we'll make a simple request without filtering to make sure everything works as intended:
-
-::
-
-    $ http GET ":8000/api/blogposts/" Authorization:'JWT <jwt_token>' Accept:'application/json;indent=4'
+    $ http --auth=reader:reader GET ":8000/api/blogposts/" Accept:'application/json;indent=4'
     HTTP/1.0 200 OK
     Allow: GET, POST, HEAD, OPTIONS
     Content-Type: application/json;indent=4
@@ -311,7 +293,7 @@ The values for the filters are supplied as request parameters in the URL. If we 
 
 ::
 
-    $ http GET ":8000/api/blogposts/?q=Ut+Dolor" Authorization:'JWT <jwt_token>' Accept:'application/json;indent=4'
+    $ http --auth=reader:reader GET ":8000/api/blogposts/?q=Ut+Dolor" Accept:'application/json;indent=4'
     HTTP/1.0 200 OK
     Allow: GET, POST, HEAD, OPTIONS
     Content-Type: application/json;indent=4
@@ -371,7 +353,7 @@ Similarly If we wanted to know which comment on the blogpost with id "eb17b879-c
 
 ::
 
-    $ http GET ":8000/api/comments/?blogpost=eb17b879-cdcc-4c9c-a088-7c9b9f8d63b3&q=Ut+Dolor" Authorization:'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJleHAiOjE0NTI0ODQxMjYsImVtYWlsIjoiIiwidXNlcm5hbWUiOiJyZWFkZXIifQ.NlEAK2st4fDBSXzEJzWwLiuBrtq344arlBDaUEeqLoY' Accept:'application/json;indent=4'HTTP/1.0 200 OK
+    $ http --auth=reader:reader GET ":8000/api/comments/?blogpost=eb17b879-cdcc-4c9c-a088-7c9b9f8d63b3&q=Ut+Dolor" Accept:'application/json;indent=4'HTTP/1.0 200 OK
     Allow: GET, POST, HEAD, OPTIONS
     Content-Type: application/json;indent=4
     Date: Sun, 10 Jan 2016 18:56:15 GMT
